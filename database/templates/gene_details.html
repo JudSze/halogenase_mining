@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}{{ enzyme.gene_name }} Details{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ enzyme.gene_name }}</li>
+            </ol>
+        </nav>
+        
+        <h1 class="mb-4">{{ enzyme.gene_name }}</h1>
+        <div class="card mb-4">
+            <div class="card-header">
+                Enzyme Information
+            </div>
+            <div class="card-body">
+                <!-- Enzyme summary stored in markdow in psgsql -->
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                Gene Data
+            </div>
+            <div class="card-body">
+                {% if error %}
+                    <div class="alert alert-warning">{{ error }}</div>
+                {% elif gene_data %}
+                    <table id="gene-data-table" class="table table-striped">
+                        <thead>
+                            <tr>
+                                {% for column in columns %}
+                                <th>{{ column }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in gene_data %}
+                            <tr>
+                                {% for column in columns %}
+                                <td>{{ row[column] }}</td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <div class="alert alert-info">No data available for this gene.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        {% if gene_data %}
+        $('#gene-data-table').DataTable({
+            responsive: true,
+            pageLength: 25
+        });
+        {% endif %}
+    });
+</script>
+{% endblock %}

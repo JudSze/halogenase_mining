@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Enzyme Database - Main Page{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">Enzymes</h1>
+        <div class="card">
+            <div class="card-header">
+                Enzyme List
+            </div>
+            <div class="card-body">
+                <table id="enzyme-table" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Enzyme Name</th>
+                            <th>Accession</th>
+                            <th>Family</th>
+                            <th>Species</th>
+                            <th>Validation type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for enzyme in enzymes %}
+                        <tr>
+                            <td>
+                                <a href="{{ url_for('gene_details', gene_name=enzyme.gene_name) }}">
+                                    {{ enzyme.gene_name }}
+                                </a>
+                            </td>
+                            <td>
+                                <a>
+                                {{ enzyme.accession }}
+                                </a>
+                            <td>
+                                <a>
+                                {{ enzyme.family}}
+                                </a>
+                            </td>
+                            </td>
+                            <td>
+                                <a>
+                                {{ enzyme.species }}
+                                </a>
+                            </td>
+                            <td>
+                                <a>
+                                {{ enzyme.validation_type }}
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        $('#enzyme-table').DataTable({
+            responsive: true,
+            pageLength: 25
+        });
+    });
+</script>
+{% endblock %}
