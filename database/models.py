@@ -88,8 +88,42 @@ def get_gene_data(gene_name):
 
     return data
 
-# Get summarized description about the laboratory protocol
-# def get_enzyme_summary():
-#     """
-#     Get summary from the markdown files for each enzyme
-#     """
+def get_summary_table(gene_name):
+    metadata = MetaData()
+    metadata.reflect(bind=db.engine, only=[f"summary_{gene_name}"])
+
+    # Check if the table exists
+    if gene_name in metadata.tables:
+        return metadata.tables[f"summary_{gene_name}"]
+
+    return metadata.tables[f"summary_{gene_name}"]
+
+def get_summary_table_columns(gene_name):
+    inspector = inspect(db.engine)
+
+    # Check if table exists
+    if gene_name in inspector.get_table_names():
+        return [column['name'] for column in inspector.get_columns(f"summary_{gene_name}")]
+
+    return [column['name'] for column in inspector.get_columns(f"summary_{gene_name}")]
+
+def get_summary_data(gene_name):
+    table = get_summary_table(gene_name)
+
+    if table is None:
+        return []
+
+    columns = get_summary_table_columns(gene_name)
+
+    # Execute a query to get all data from the table
+    result = db.session.execute(table.select())
+
+    # Convert to list of dictionaries
+    data = []
+    for row in result:
+        row_dict = {}
+        for i, column in enumerate(columns):
+            row_dict[column] = row[i]
+        data.append(row_dict)
+
+    return data

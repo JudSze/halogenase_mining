@@ -18,10 +18,13 @@
                 Enzyme Information
             </div>
             <div class="card-body">
-                <!-- Enzyme summary stored in markdow in psgsql -->
+                {% for row in enzyme_summary %}
+                <tr>
+                    {{ row["summary"]}}
+                </tr>
+                {% endfor %}
             </div>
         </div>
-        
         <div class="card">
             <div class="card-header">
                 Gene Data
